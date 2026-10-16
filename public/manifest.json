@@ -1,0 +1,26 @@
+{
+  "name": "CryptoAdvisor",
+  "short_name": "CryptoAdvisor",
+  "description": "AI-powered cryptocurrency knowledge agent with pay-per-query and subscription access.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d1b2f",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "education"],
+  "screenshots": []
+}
