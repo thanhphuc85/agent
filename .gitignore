@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+
+# env secrets
+.env
+.env.local
+.env.*.local
+
+# build output
+dist/
+
+# Foundry build artifacts (large, reproducible)
+contracts/out/
+contracts/cache/
+
+# logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# runtime data
+traces.jsonl
+console.jsonl
+server/data/push-subscriptions.json
+server/data/portfolios.json
+server/data/events-cache.json

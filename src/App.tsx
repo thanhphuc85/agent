@@ -73,9 +73,7 @@ function saveSession(address: string, s: SessionState) {
   localStorage.setItem(sessionKey(address), JSON.stringify(s))
 }
 
-function clearSession(address: string) {
-  localStorage.removeItem(sessionKey(address))
-}
+
 
 // ── SessionBadge ──────────────────────────────────────────────────────────
 interface SessionBadgeProps {
@@ -84,11 +82,13 @@ interface SessionBadgeProps {
 }
 
 function SessionBadge({ address, onSetup }: SessionBadgeProps) {
-  const [session, setSession] = useState<SessionState | null>(null)
+  const [session, setSession] = useState<SessionState | null>(() =>
+    address ? loadSession(address) : null
+  )
 
-  useLayoutEffect(() => {
-    if (!address) { setSession(null); return }
-    setSession(loadSession(address))
+  useEffect(() => {
+    if (!address) { queueMicrotask(() => setSession(null)); return }
+    queueMicrotask(() => setSession(loadSession(address)))
     const id = setInterval(() => setSession(loadSession(address)), 5_000)
     return () => clearInterval(id)
   }, [address])
@@ -279,21 +279,9 @@ function PaymentGate({ dark, pendingQuery, onPaid, onCancel }: PaymentGateProps)
   const [step, setStep] = useState<PayStep>('idle')
   const [subStep, setSubStep] = useState<PayStep>('idle')
   const [errorMsg, setErrorMsg] = useState('')
-  // Session: derive from localStorage on each render via a counter-bump trick
-  const [sessionTick, setSessionTick] = useState(0)
-  const sessionRef = useRef<SessionState | null>(address ? loadSession(address) : null)
-  // re-read when address changes
-  const addrRef = useRef(address)
-  if (addrRef.current !== address) {
-    addrRef.current = address
-    sessionRef.current = address ? loadSession(address) : null
-  }
-  const session = sessionRef.current
-  const setSession = (s: SessionState | null) => {
-    sessionRef.current = s
-    setSessionTick(t => t + 1)  // force re-render
-  }
-  void sessionTick  // consumed to satisfy linter unused-var
+  const [session, setSession] = useState<SessionState | null>(() =>
+    address ? loadSession(address) : null
+  )
 
   const isWrongChain = chainId !== ARC_CHAIN_ID
 
