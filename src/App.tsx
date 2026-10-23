@@ -296,7 +296,7 @@ function PaymentGate({ dark, pendingQuery, onPaid, onCancel }: PaymentGateProps)
   })
 
   // USDC balance
-  const { data: balance } = useReadContract({
+  const { data: balance, error: balanceError } = useReadContract({
     address: USDC_ADDRESS,
     abi: erc20Abi,
     functionName: 'balanceOf',
@@ -304,6 +304,7 @@ function PaymentGate({ dark, pendingQuery, onPaid, onCancel }: PaymentGateProps)
     chainId: ARC_CHAIN_ID,
     query: { enabled: !!address },
   })
+  if (balanceError) console.error('USDC Balance Fetch Error:', balanceError)
 
   // Current allowance (skip when session is active — we already approved in bulk)
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
@@ -520,7 +521,7 @@ function PaymentGate({ dark, pendingQuery, onPaid, onCancel }: PaymentGateProps)
         {(step === 'error' || !hasEnoughBalance) && (
           <div className="flex items-center gap-2 text-xs rounded-lg px-3 py-2" style={{ background: 'rgba(186,43,76,0.08)', color: 'var(--danger)' }}>
             <AlertCircle size={12} />
-            <span>{!hasEnoughBalance ? 'Insufficient USDC balance. Use the faucet to get test USDC.' : errorMsg || 'Transaction failed. Please try again.'}</span>
+            <span>{!hasEnoughBalance ? 'Insufficient USDC balance on Arc Mainnet.' : errorMsg || 'Transaction failed. Please try again.'}</span>
           </div>
         )}
 
